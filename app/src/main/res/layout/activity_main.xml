@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#FAFAFA"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <ScrollView style="@style/FragmentScrollViewStyle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextStyle.Main"
+                android:layout_marginTop="16.0dip"
+                android:text="ОТ" />
+
+            <ru.gulov.animationcard.CustomEditText
+                android:id="@+id/f_num_from_et"
+                android:text="1"
+                style="@style/TextStyle.Main.Input.Number.Decimal.Accent"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                android:textColor="@color/colorAccent" />
+
+            <TextView
+                style="@style/TextStyle.Main"
+                android:text="ДО" />
+
+            <ru.gulov.animationcard.CustomEditText
+                android:text="10"
+                android:id="@+id/f_num_to"
+                style="@style/TextStyle.Main.Input.Number.Decimal.Accent"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                android:textColor="@color/colorAccent" />
+
+
+
+            <include layout="@layout/v_params" />
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/f_num_toolbar"
+            style="@style/LightAppBarStyle.ModeStyle">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Число"
+                    android:textStyle="bold"
+                    android:layout_centerVertical="true"
+                    android:textSize="21dp"
+                    android:textColor="#FFFFFF"/>
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_sound_disabled"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include
+        layout="@layout/v_result"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/v_trigger_fabs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom|center"
+        android:layout_margin="16.0dip"
+        android:clickable="true"
+        android:contentDescription="aa"
+        android:focusable="true"
+        app:fabCustomSize="64dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="32.0dip"
+        app:srcCompat="@drawable/ic_fab" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
