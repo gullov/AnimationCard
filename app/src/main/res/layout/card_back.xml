@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="149"
+        android:text=""
         android:textSize="70dp"
 
         android:id="@+id/first"

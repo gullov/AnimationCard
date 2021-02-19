@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="176"
+        android:text=""
         android:textSize="70dp"
         android:id="@+id/second"
         android:textColor="@color/white"
