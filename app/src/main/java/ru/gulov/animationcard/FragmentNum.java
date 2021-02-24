@@ -38,20 +38,14 @@ public class FragmentNum extends Fragment {
 
 
     FloatingActionButton v_trigger_fabs;
-    CardView v_result_card;
     View background, backgrounds;
-    CustomEditText f_num_from_et, f_num_to;
+    CustomEditText f_num_from_et, f_num_to, v_params_delay_et, v_params_quantity_et;
     TextView first, second, v_param_no_repeat_counter;
-    int is = 0;
-    int globalIndex = 0;
-    AsyncTask<?, ?, ?> shuffle;
     ArrayList<Integer> number = new ArrayList<Integer>();
     ArrayList<Integer> helper100 = new ArrayList<Integer>();
     String counts = "";
     private AnimatorSet mSetRightOut;
     private AnimatorSet mSetLeftIn;
-    private AnimatorSet mHide;
-    private AnimatorSet mShow;
     private boolean mIsBackVisible = false;
     private boolean still = false;
     private boolean firstShow = true;
@@ -82,8 +76,12 @@ public class FragmentNum extends Fragment {
 
         first = v.findViewById(R.id.first);
         second = v.findViewById(R.id.second);
+
         f_num_from_et = v.findViewById(R.id.f_num_from_et);
         f_num_to = v.findViewById(R.id.f_num_to);
+        v_params_delay_et = v.findViewById(R.id.v_params_delay_et);
+        v_params_quantity_et = v.findViewById(R.id.v_params_quantity_et);
+
         v_param_no_repeat_counter = v.findViewById(R.id.v_param_no_repeat_counter);
         backgrounds = v.findViewById(R.id.backgrounds);
         background = v.findViewById(R.id.v_result_root);
@@ -140,30 +138,56 @@ public class FragmentNum extends Fragment {
             }
         });
 
-        f_num_from_et.setCustomListener(new CustomEditText.MyAdapterListener() {
-            @Override
-            public void backPressed(View v, boolean a) {
-                Log.d("plaplapl", "onEditorAction: " + "plaplap");
-                f_num_from_et.clearFocus();
-                hideKeyboard(v);
-                new Shuffle().execute();
+        f_num_from_et.setCustomListener((v, a) -> {
+            Log.d("plaplapl", "onEditorAction: " + "plaplap");
+            f_num_from_et.clearFocus();
+            hideKeyboard(v);
+            new Shuffle().execute();
 
-                counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
-                v_param_no_repeat_counter.setText("0/" + counts);
+            counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
+            v_param_no_repeat_counter.setText("0/" + counts);
+        });
+        f_num_from_et.setOnEditorActionListener((v, actionId, event) -> {
+             switch (actionId) {
+                case EditorInfo.IME_ACTION_DONE:
+                    f_num_from_et.clearFocus();
+                    hideKeyboard(v);
+                    new Shuffle().execute();
+                    counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
+                    v_param_no_repeat_counter.setText("0/" + counts);
+                    return true;
+                default:
+                    return false;
+            }
+
+        });
+        f_num_from_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    v_trigger_fabs.hide();
+                } else {
+                    //lost focus
+                }
             }
         });
-        f_num_from_et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+        v_params_delay_et.setCustomListener(new CustomEditText.MyAdapterListener() {
+            @Override
+            public void backPressed(View v, boolean a) {
+                v_params_delay_et.clearFocus();
+                hideKeyboard(v);
+            }
+        });
+        v_params_delay_et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                 switch (actionId) {
+                switch (actionId) {
 
                     case EditorInfo.IME_ACTION_DONE:
                         Log.d("plaplapl", "onEditorAction: " + "plaplap");
-                        f_num_from_et.clearFocus();
+                        v_params_delay_et.clearFocus();
                         hideKeyboard(v);
-                        new Shuffle().execute();
-                        counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
-                        v_param_no_repeat_counter.setText("0/" + counts);
                         return true;
                     default:
                         return false;
@@ -172,7 +196,43 @@ public class FragmentNum extends Fragment {
             }
 
         });
-        f_num_from_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        v_params_delay_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    v_trigger_fabs.hide();
+                } else {
+                    //lost focus
+                }
+            }
+        });
+
+        v_params_quantity_et.setCustomListener(new CustomEditText.MyAdapterListener() {
+            @Override
+            public void backPressed(View v, boolean a) {
+                v_params_quantity_et.clearFocus();
+                hideKeyboard(v);
+
+            }
+        });
+        v_params_quantity_et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+
+                    case EditorInfo.IME_ACTION_DONE:
+                        Log.d("plaplapl", "onEditorAction: " + "plaplap");
+                        v_params_quantity_et.clearFocus();
+                        hideKeyboard(v);
+                          return true;
+                    default:
+                        return false;
+                }
+
+            }
+
+        });
+        v_params_quantity_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {

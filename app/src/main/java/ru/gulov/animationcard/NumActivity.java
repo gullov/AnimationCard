@@ -27,15 +27,8 @@ import androidx.cardview.widget.CardView;
 public class NumActivity extends AppCompatActivity {
 
     FloatingActionButton v_trigger_fabs;
-    CardView v_result_card;
     View background, backgrounds;
-    TextView first, second, v_param_no_repeat_counter;
-    int is = 0;
-    int globalIndex = 0;
-    AsyncTask<?, ?, ?> shuffle;
-    ArrayList<Integer> number = new ArrayList<Integer>();
-    ArrayList<Integer> helper100 = new ArrayList<Integer>();
-    String counts = "";
+    TextView first, second;
     int counter = 0;
     private AnimatorSet mSetRightOut;
     private AnimatorSet mSetLeftIn;

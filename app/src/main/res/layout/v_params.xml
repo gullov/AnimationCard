@@ -57,7 +57,7 @@
                 style="@style/TextStyle.Params"
                 android:text="Количество" />
 
-            <EditText
+            <ru.gulov.animationcard.CustomEditText
                 android:id="@+id/v_params_quantity_et"
 				style="@style/TextStyle.Params.Input.Number"
                 android:layout_marginBottom="0.0dip"
@@ -87,7 +87,7 @@
                 style="@style/TextStyle.Params"
                 android:text="Время задержки (сек)" />
 
-            <EditText
+            <ru.gulov.animationcard.CustomEditText
                 android:id="@+id/v_params_delay_et"
                 style="@style/TextStyle.Params.Input.Number"
                 android:layout_marginBottom="0.0dip"
