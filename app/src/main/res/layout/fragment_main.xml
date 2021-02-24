@@ -180,7 +180,7 @@
                 app:backgroundTint="#FF00BCD4"
                 app:elevation="2.0dip"
                 app:fabCustomSize="40.0dip"
-                app:srcCompat="@drawable/ic_add_list"
+                app:srcCompat="@drawable/ic_baseline_add_24"
                 android:contentDescription="TODO" />
 
         </LinearLayout>

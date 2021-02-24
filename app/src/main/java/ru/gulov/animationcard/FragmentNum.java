@@ -5,9 +5,11 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -21,6 +23,11 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,10 +35,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import static android.content.Context.MODE_PRIVATE;
 import static java.lang.Math.abs;
 
 public class FragmentNum extends Fragment {
@@ -44,6 +55,7 @@ public class FragmentNum extends Fragment {
     ArrayList<Integer> number = new ArrayList<Integer>();
     ArrayList<Integer> helper100 = new ArrayList<Integer>();
     String counts = "";
+    FrameLayout card_front_color, card_back_color;
     private AnimatorSet mSetRightOut;
     private AnimatorSet mSetLeftIn;
     private boolean mIsBackVisible = false;
@@ -51,7 +63,15 @@ public class FragmentNum extends Fragment {
     private boolean firstShow = true;
     private View mCardFrontLayout;
     private View mCardBackLayout;
+    ImageView v_param_add_features;
     int counter = 0;
+    Switch  switch2, switch3;
+    private Switch switch1;
+    CardView v_params_no_repeat, v_params_quantity, v_params_delay;
+    TextView refreshButton;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
     public FragmentNum() {
         // Required empty public constructor
     }
@@ -66,16 +86,24 @@ public class FragmentNum extends Fragment {
             R.color.n9,
     };
     View v;
-
+    Boolean a = true;
+    AlertDialog alertDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_num, container, false);
+        v_param_add_features = v.findViewById(R.id.v_param_add_features);
 
-
+        pref = getActivity().getSharedPreferences("MyPref", MODE_PRIVATE);
+        editor = pref.edit();
+        card_back_color = v.findViewById(R.id.back_card_color);
+        card_front_color = v.findViewById(R.id.front_card_color);
         first = v.findViewById(R.id.first);
         second = v.findViewById(R.id.second);
+        v_params_no_repeat = v.findViewById(R.id.v_params_no_repeat);
+        v_params_quantity = v.findViewById(R.id.v_params_quantity);
+        v_params_delay = v.findViewById(R.id.v_params_delay);
 
         f_num_from_et = v.findViewById(R.id.f_num_from_et);
         f_num_to = v.findViewById(R.id.f_num_to);
@@ -245,7 +273,24 @@ public class FragmentNum extends Fragment {
 
 
         new Shuffle().execute();
-
+        if (pref.getBoolean("s1", true)){
+            v_params_no_repeat.setVisibility(View.VISIBLE);
+        }
+        else{
+            v_params_no_repeat.setVisibility(View.GONE);
+        }
+        if (pref.getBoolean("s2", true)){
+            v_params_quantity.setVisibility(View.VISIBLE);
+        }
+        else{
+            v_params_quantity.setVisibility(View.GONE);
+        }
+        if (pref.getBoolean("s3", true)){
+            v_params_delay.setVisibility(View.VISIBLE);
+        }
+        else{
+            v_params_delay.setVisibility(View.GONE);
+        }
 
 
         backgrounds.setOnClickListener(new View.OnClickListener() {
@@ -290,6 +335,62 @@ public class FragmentNum extends Fragment {
                 }
             }
         });
+        v_param_add_features.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater =getActivity().getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.v_params_dialog, null);
+                dialogBuilder.setView(dialogView);
+                switch1 = dialogView.findViewById(R.id.switch122);
+                switch2 = dialogView.findViewById(R.id.switch2);
+                switch3 = dialogView.findViewById(R.id.switch3);
+                switch1.setChecked(pref.getBoolean("s1", true));
+                switch2.setChecked(pref.getBoolean("s2", true));
+                switch3.setChecked(pref.getBoolean("s3", true));
+
+                refreshButton = dialogView.findViewById(R.id.refreshButton);
+                refreshButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (switch1.isChecked()){
+                            v_params_no_repeat.setVisibility(View.VISIBLE);
+                            editor.putBoolean("s1", true);
+                        }
+                        else{
+                            v_params_no_repeat.setVisibility(View.GONE);
+                            editor.putBoolean("s1", false);
+                        }
+                        if (switch2.isChecked()){
+                            v_params_quantity.setVisibility(View.VISIBLE);
+                            editor.putBoolean("s2", true);
+                        }
+                        else{
+                            v_params_quantity.setVisibility(View.GONE);
+
+                            editor.putBoolean("s2", false);
+                        }
+                        if (switch3.isChecked()){
+                            v_params_delay.setVisibility(View.VISIBLE);
+
+                            editor.putBoolean("s3", true);
+                        }
+                        else{
+                            v_params_delay.setVisibility(View.GONE);
+
+                            editor.putBoolean("s3", false);
+                        }
+                        editor.apply();
+                    alertDialog.hide();
+                    }
+                });
+
+
+                alertDialog = dialogBuilder.create();
+                alertDialog.show();
+            }
+        });
+
 
         return v;
 
@@ -399,6 +500,10 @@ public class FragmentNum extends Fragment {
                 mSetRightOut.start();
                 mSetLeftIn.start();
                 mIsBackVisible = true;
+                final int min = 0;
+                final int max = 8;
+                final int random = new Random().nextInt((max - min) + 1) + min;
+                card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
             } else {
                 second.setText(number+"");
                 mSetRightOut.setTarget(mCardBackLayout);
@@ -406,6 +511,10 @@ public class FragmentNum extends Fragment {
                 mSetRightOut.start();
                 mSetLeftIn.start();
                 mIsBackVisible = false;
+                final int min = 0;
+                final int max = 9;
+                final int random = new Random().nextInt((max - min) + 1) + min;
+                card_front_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
             }
         }
         Log.d("plaplaplpal", "flipCard: "+counter+"  "+this.number.size());

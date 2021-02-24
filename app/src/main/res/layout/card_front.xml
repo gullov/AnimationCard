@@ -4,7 +4,8 @@
     android:layout_width="192dp"
     android:layout_height="192dp"
     android:background="@drawable/rectangle"
-    android:backgroundTint="#000000"
+    android:id="@+id/front_card_color"
+    android:backgroundTint="@color/n8"
     android:orientation="vertical">
 
 
