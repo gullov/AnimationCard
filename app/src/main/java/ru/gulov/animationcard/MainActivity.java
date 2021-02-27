@@ -3,6 +3,8 @@
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
+import java.util.ArrayList;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -13,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout container;
     public boolean isShowed = false;
     FragmentNum newFragment;
+    ArrayList<Integer> characters = new ArrayList<>();
+    public int count = 0;
+    boolean isShowNumbers = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +58,19 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
+    public void ShowRandom() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.design_bottom_sheet_slide_out12, R.anim.design_bottom_sheet_slide_in12);
+
+        FragmentRandom newFragment = new FragmentRandom();
+        ft.replace(R.id.container, newFragment, "detailFragment");
+        ft.commit();
+    }
+
     @Override
     public void onBackPressed() {
         if (isShowed){
-            newFragment.circularReActivity();
+//            newFragment.circularReActivity();
             isShowed = false;
         }
         else {

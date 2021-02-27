@@ -5,6 +5,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -27,6 +28,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -55,7 +57,7 @@ public class FragmentNum extends Fragment {
     ArrayList<Integer> number = new ArrayList<Integer>();
     ArrayList<Integer> helper100 = new ArrayList<Integer>();
     String counts = "";
-    FrameLayout card_front_color, card_back_color;
+    RelativeLayout card_front_color, card_back_color;
     private AnimatorSet mSetRightOut;
     private AnimatorSet mSetLeftIn;
     private boolean mIsBackVisible = false;
@@ -132,7 +134,7 @@ public class FragmentNum extends Fragment {
                 Log.d("plaplapl", "onEditorAction: " + "plaplap");
                 f_num_to.clearFocus();
                 hideKeyboard(v);
-                new Shuffle().execute();
+                Shuffling();
                 counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
                 v_param_no_repeat_counter.setText("0/" + counts);
 
@@ -145,7 +147,7 @@ public class FragmentNum extends Fragment {
                     Log.d("plaplapl", "onEditorAction: " + "plaplap");
                     f_num_to.clearFocus();
                     hideKeyboard(v);
-                    new Shuffle().execute();
+                    Shuffling();
                     counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
                     v_param_no_repeat_counter.setText("0/" + counts);
                     return true;
@@ -170,7 +172,7 @@ public class FragmentNum extends Fragment {
             Log.d("plaplapl", "onEditorAction: " + "plaplap");
             f_num_from_et.clearFocus();
             hideKeyboard(v);
-            new Shuffle().execute();
+            Shuffling();
 
             counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
             v_param_no_repeat_counter.setText("0/" + counts);
@@ -180,7 +182,7 @@ public class FragmentNum extends Fragment {
                 case EditorInfo.IME_ACTION_DONE:
                     f_num_from_et.clearFocus();
                     hideKeyboard(v);
-                    new Shuffle().execute();
+                    Shuffling();
                     counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
                     v_param_no_repeat_counter.setText("0/" + counts);
                     return true;
@@ -271,8 +273,7 @@ public class FragmentNum extends Fragment {
             }
         });
 
-
-        new Shuffle().execute();
+        Shuffling();
         if (pref.getBoolean("s1", true)){
             v_params_no_repeat.setVisibility(View.VISIBLE);
         }
@@ -316,6 +317,10 @@ public class FragmentNum extends Fragment {
         v_trigger_fabs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(((MainActivity)getActivity()).isShowNumbers) {
+                    getNewData();
+                    ((MainActivity)getActivity()).isShowNumbers = false;
+                }
                 if (firstShow) {
                     circularRevealActivity();
                     firstShow = false;
@@ -388,6 +393,15 @@ public class FragmentNum extends Fragment {
 
                 alertDialog = dialogBuilder.create();
                 alertDialog.show();
+            }
+        });
+        v_param_add_features.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ((MainActivity)getActivity()).count = number.size();
+                ((MainActivity)getActivity()).ShowRandom();
+
+                return true;
             }
         });
 
@@ -512,7 +526,7 @@ public class FragmentNum extends Fragment {
                 mSetLeftIn.start();
                 mIsBackVisible = false;
                 final int min = 0;
-                final int max = 9;
+                final int max = 8;
                 final int random = new Random().nextInt((max - min) + 1) + min;
                 card_front_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
             }
@@ -535,34 +549,15 @@ public class FragmentNum extends Fragment {
 
     }
 
-    class Shuffle extends AsyncTask<Void, Void, Void> {
-        int counter = 0;
-        int counter2 = 100;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            number = new ArrayList<Integer>();
-            helper100 = new ArrayList<Integer>();
+    public void Shuffling(){
+        number = new ArrayList<>();
+        for (int i = Integer.parseInt(f_num_from_et.getText().toString()) - 1;
+             i < Integer.parseInt(f_num_to.getText().toString()); i++) {
+            number.add((int) (i + 1));
         }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            for (int i = Integer.parseInt(f_num_from_et.getText().toString()) - 1;
-                 i < Integer.parseInt(f_num_to.getText().toString()); i++) {
-                number.add((int) (i + 1));
-                counter++;
-                Log.d("plaplapla", "doInBackground: " + number.get(counter - 1) + "  " + number.size());
-            }
-            Collections.shuffle(number);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            Log.d("TAGssss", "onPostExecute: ");
-        }
-
     }
+    public void getNewData(){
+        number = ((MainActivity)getActivity()).characters;
+    }
+
 }
