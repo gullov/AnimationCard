@@ -508,7 +508,23 @@ public class FragmentNum extends Fragment {
     public void flipCard(int number) {
         if (!still) {
             if (!mIsBackVisible) {
-                first.setText(number+"");
+                if(Integer.parseInt(v_params_quantity_et.getText().toString())>1){
+                    first.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                    StringBuilder s = new StringBuilder();
+                    for(int i = 0 ; i<Integer.parseInt(v_params_quantity_et.getText().toString()); i++){
+                        if (i+1 == Integer.parseInt(v_params_quantity_et.getText().toString())) {
+                            s.append(this.number.get(counter + i));
+                        } else {
+                            s.append(this.number.get(counter + i)).append(", ");
+                        }
+                    }
+                    counter+=Integer.parseInt(v_params_quantity_et.getText().toString())-1;
+                    first.setText(s);
+                }
+                else{
+                    first.setText(number+"");
+                    first.setTextSize(TypedValue.COMPLEX_UNIT_SP, 95);
+                }
                 mSetRightOut.setTarget(mCardFrontLayout);
                 mSetLeftIn.setTarget(mCardBackLayout);
                 mSetRightOut.start();
@@ -519,7 +535,22 @@ public class FragmentNum extends Fragment {
                 final int random = new Random().nextInt((max - min) + 1) + min;
                 card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
             } else {
-                second.setText(number+"");
+                if(Integer.parseInt(v_params_quantity_et.getText().toString())>1){
+                    second.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                    StringBuilder s = new StringBuilder();
+                    for(int i = 0 ; i<Integer.parseInt(v_params_quantity_et.getText().toString()); i++) {
+                        if (i+1 == Integer.parseInt(v_params_quantity_et.getText().toString())) {
+                            s.append(this.number.get(counter + i));
+                        } else {
+                            s.append(this.number.get(counter + i)).append(", ");
+                        }
+                    }
+                    counter+=Integer.parseInt(v_params_quantity_et.getText().toString())-1;
+                    second.setText(s);}
+                else{
+                    second.setText(number+"");
+                    second.setTextSize(TypedValue.COMPLEX_UNIT_SP, 95);
+                }
                 mSetRightOut.setTarget(mCardBackLayout);
                 mSetLeftIn.setTarget(mCardFrontLayout);
                 mSetRightOut.start();
