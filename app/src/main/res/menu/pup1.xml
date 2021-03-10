@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/one"
+        android:title="Оценить"/>
+
+    <item
+        android:id="@+id/two"
+        android:title="Купить премиум"/>
+
+    <item
+        android:id="@+id/three"
+        android:title="Тема оформления"/>
+
+    <item
+        android:id="@+id/four"
+        android:title="Связаться с нами"/>
+
+    <item
+        android:id="@+id/five"
+        android:title="Конфиденциальность"/>
+
+    <item
+        android:id="@+id/six"
+        android:title="Рассказать о приложении"/>
+
+</menu>

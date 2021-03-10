@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public void ShowNum() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.design_bottom_sheet_slide_in1, R.anim.design_bottom_sheet_slide_out1);

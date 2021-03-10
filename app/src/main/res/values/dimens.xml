@@ -1,0 +1,37 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <integer name="duration1">1200</integer>
+    <integer name="duration2">2400</integer>
+    <integer name="duration3">3600</integer>
+    <integer name="duration4">4800</integer>
+    <integer name="duration5">6000</integer>
+    <integer name="duration6">7200</integer>
+    <integer name="duration7">8400</integer>
+    <integer name="duration8">9600</integer>
+    <integer name="duration9">10800</integer>
+    <integer name="duration10">12000</integer>
+
+    <dimen name="angle1">-90</dimen>
+    <dimen name="angle2">-450</dimen>
+    <dimen name="angle3">-810</dimen>
+    <dimen name="angle4">-990</dimen>
+    <dimen name="angle5">-1350</dimen>
+    <dimen name="angle6">-1710</dimen>
+    <dimen name="angle7">-1890</dimen>
+    <dimen name="angle8">-2250</dimen>
+    <dimen name="angle9">-2610</dimen>
+    <dimen name="angle10">-2970</dimen>
+
+    <integer name="anglr_half1">600</integer>
+    <integer name="anglr_half2">2000</integer>
+    <integer name="anglr_half3">3200</integer>
+    <integer name="anglr_half4">4400</integer>
+    <integer name="anglr_half5">5600</integer>
+    <integer name="anglr_half6">6800</integer>
+    <integer name="anglr_half7">8000</integer>
+    <integer name="anglr_half8">9200</integer>
+    <integer name="anglr_half9">10400</integer>
+    <integer name="anglr_half10">11600</integer>
+
+</resources>

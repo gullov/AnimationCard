@@ -5,28 +5,24 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.KeyListener;
+import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.OvershootInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -36,11 +32,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
@@ -54,29 +49,19 @@ public class FragmentNum extends Fragment {
     View background, backgrounds;
     CustomEditText f_num_from_et, f_num_to, v_params_delay_et, v_params_quantity_et;
     TextView first, second, v_param_no_repeat_counter;
-    ArrayList<Integer> number = new ArrayList<Integer>();
+    public ArrayList<Integer> number = new ArrayList<Integer>();
     ArrayList<Integer> helper100 = new ArrayList<Integer>();
     String counts = "";
+    ImageView v_param_no_repeat_menu;
     RelativeLayout card_front_color, card_back_color;
-    private AnimatorSet mSetRightOut;
-    private AnimatorSet mSetLeftIn;
-    private boolean mIsBackVisible = false;
-    private boolean still = false;
-    private boolean firstShow = true;
-    private View mCardFrontLayout;
-    private View mCardBackLayout;
     ImageView v_param_add_features;
     int counter = 0;
-    Switch  switch2, switch3;
-    private Switch switch1;
+    Switch switch2, switch3;
     CardView v_params_no_repeat, v_params_quantity, v_params_delay;
     TextView refreshButton;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
-
-    public FragmentNum() {
-        // Required empty public constructor
-    }
+    ImageView v_params_delay_menu, v_param_quantity_menu;
     int[] colors = {R.color.n1,
             R.color.n2,
             R.color.n3,
@@ -90,13 +75,27 @@ public class FragmentNum extends Fragment {
     View v;
     Boolean a = true;
     AlertDialog alertDialog;
+    private AnimatorSet mSetRightOut;
+    private AnimatorSet mSetLeftIn;
+    private boolean mIsBackVisible = false;
+    private boolean still = false;
+    private boolean firstShow = true;
+    private View mCardFrontLayout;
+    private View mCardBackLayout;
+    private Switch switch1;
+    public FragmentNum() {
+        // Required empty public constructor
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_num, container, false);
         v_param_add_features = v.findViewById(R.id.v_param_add_features);
-
+        v_param_no_repeat_menu = v.findViewById(R.id.v_param_no_repeat_menu);
+        v_param_quantity_menu = v.findViewById(R.id.v_param_quantity_menu);
+        v_params_delay_menu = v.findViewById(R.id.v_params_delay_menu);
         pref = getActivity().getSharedPreferences("MyPref", MODE_PRIVATE);
         editor = pref.edit();
         card_back_color = v.findViewById(R.id.back_card_color);
@@ -121,9 +120,6 @@ public class FragmentNum extends Fragment {
         mCardBackLayout = v.findViewById(R.id.card_back);
         mCardFrontLayout = v.findViewById(R.id.card_front);
 
-
-        loadAnimations();
-        changeCameraDistance();
 
         counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
         v_param_no_repeat_counter.setText("0/" + counts);
@@ -178,7 +174,7 @@ public class FragmentNum extends Fragment {
             v_param_no_repeat_counter.setText("0/" + counts);
         });
         f_num_from_et.setOnEditorActionListener((v, actionId, event) -> {
-             switch (actionId) {
+            switch (actionId) {
                 case EditorInfo.IME_ACTION_DONE:
                     f_num_from_et.clearFocus();
                     hideKeyboard(v);
@@ -254,7 +250,7 @@ public class FragmentNum extends Fragment {
                         Log.d("plaplapl", "onEditorAction: " + "plaplap");
                         v_params_quantity_et.clearFocus();
                         hideKeyboard(v);
-                          return true;
+                        return true;
                     default:
                         return false;
                 }
@@ -274,22 +270,19 @@ public class FragmentNum extends Fragment {
         });
 
         Shuffling();
-        if (pref.getBoolean("s1", true)){
+        if (pref.getBoolean("s1", true)) {
             v_params_no_repeat.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             v_params_no_repeat.setVisibility(View.GONE);
         }
-        if (pref.getBoolean("s2", true)){
+        if (pref.getBoolean("s2", true)) {
             v_params_quantity.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             v_params_quantity.setVisibility(View.GONE);
         }
-        if (pref.getBoolean("s3", true)){
+        if (pref.getBoolean("s3", true)) {
             v_params_delay.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             v_params_delay.setVisibility(View.GONE);
         }
 
@@ -301,25 +294,13 @@ public class FragmentNum extends Fragment {
                 firstShow = true;
             }
         });
-        mSetLeftIn.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                still = false;
-            }
 
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                still = true;
-            }
-        });
         v_trigger_fabs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(((MainActivity)getActivity()).isShowNumbers) {
+                if (((MainActivity) getActivity()).isShowNumbers) {
                     getNewData();
-                    ((MainActivity)getActivity()).isShowNumbers = false;
+                    ((MainActivity) getActivity()).isShowNumbers = false;
                 }
                 if (firstShow) {
                     circularRevealActivity();
@@ -328,15 +309,14 @@ public class FragmentNum extends Fragment {
                     rotate.setDuration(500);
                     rotate.setInterpolator(new AccelerateDecelerateInterpolator());
                     v_trigger_fabs.startAnimation(rotate);
-                    flipCard(number.get(counter));
+                    loadAnimations(number.get(counter));
 
-                }
-                else if (!still) {
+                } else if (!still) {
                     RotateAnimation rotate = new RotateAnimation(360, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                     rotate.setDuration(500);
                     rotate.setInterpolator(new AccelerateDecelerateInterpolator());
                     v_trigger_fabs.startAnimation(rotate);
-                    flipCard(number.get(counter));
+                    loadAnimations(number.get(counter));
                 }
             }
         });
@@ -344,7 +324,7 @@ public class FragmentNum extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                LayoutInflater inflater =getActivity().getLayoutInflater();
+                LayoutInflater inflater = getActivity().getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.v_params_dialog, null);
                 dialogBuilder.setView(dialogView);
                 switch1 = dialogView.findViewById(R.id.switch122);
@@ -358,35 +338,32 @@ public class FragmentNum extends Fragment {
                 refreshButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (switch1.isChecked()){
+                        if (switch1.isChecked()) {
                             v_params_no_repeat.setVisibility(View.VISIBLE);
                             editor.putBoolean("s1", true);
-                        }
-                        else{
+                        } else {
                             v_params_no_repeat.setVisibility(View.GONE);
                             editor.putBoolean("s1", false);
                         }
-                        if (switch2.isChecked()){
+                        if (switch2.isChecked()) {
                             v_params_quantity.setVisibility(View.VISIBLE);
                             editor.putBoolean("s2", true);
-                        }
-                        else{
+                        } else {
                             v_params_quantity.setVisibility(View.GONE);
 
                             editor.putBoolean("s2", false);
                         }
-                        if (switch3.isChecked()){
+                        if (switch3.isChecked()) {
                             v_params_delay.setVisibility(View.VISIBLE);
 
                             editor.putBoolean("s3", true);
-                        }
-                        else{
+                        } else {
                             v_params_delay.setVisibility(View.GONE);
 
                             editor.putBoolean("s3", false);
                         }
                         editor.apply();
-                    alertDialog.hide();
+                        alertDialog.hide();
                     }
                 });
 
@@ -398,13 +375,81 @@ public class FragmentNum extends Fragment {
         v_param_add_features.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                ((MainActivity)getActivity()).count = number.size();
-                ((MainActivity)getActivity()).ShowRandom();
+                ((MainActivity) getActivity()).count = number.size();
+                ((MainActivity) getActivity()).ShowRandom();
 
                 return true;
             }
         });
+        v_param_no_repeat_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(getContext(), v_param_no_repeat_menu);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.pup2, popup.getMenu());
 
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.two) {
+
+                            v_params_no_repeat.setVisibility(View.GONE);
+                            editor.putBoolean("s1", false);
+                            editor.apply();
+
+
+                        }
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
+            }
+        });
+        v_params_delay_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(getContext(), v_params_delay_menu);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.pup3, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        v_params_delay.setVisibility(View.GONE);
+                        editor.putBoolean("s3", false);
+
+                        editor.apply();
+
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
+            }
+        });
+        v_param_quantity_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(getContext(), v_param_quantity_menu);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.pup3, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        v_params_quantity.setVisibility(View.GONE);
+                        editor.putBoolean("s2", false);
+
+                        editor.apply();
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
+            }
+        });
 
         return v;
 
@@ -434,7 +479,7 @@ public class FragmentNum extends Fragment {
         circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
         background.setVisibility(View.VISIBLE);
         circularReveal.start();
-        ((MainActivity)getActivity()).isShowed = true;
+        ((MainActivity) getActivity()).isShowed = true;
 
     }
 
@@ -471,7 +516,7 @@ public class FragmentNum extends Fragment {
         circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
         circularReveal.start();
 
-        ((MainActivity)getActivity()).isShowed = true;
+        ((MainActivity) getActivity()).isShowed = true;
         firstShow = true;
 
     }
@@ -484,111 +529,249 @@ public class FragmentNum extends Fragment {
                 resources.getDisplayMetrics());
     }
 
-    private void changeCameraDistance() {
+
+    private void loadAnimations(int number) {
+        int handlerTime = 0;
+        if (v_params_delay_et.getText().toString().equals("1")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom1);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 0;
+        } else if (v_params_delay_et.getText().toString().equals("2")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom2);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 1300;
+
+        } else if (v_params_delay_et.getText().toString().equals("3")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom3);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 2500;
+
+        } else if (v_params_delay_et.getText().toString().equals("4")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom4);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 3700;
+
+        } else if (v_params_delay_et.getText().toString().equals("5")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom5);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 4900;
+
+        } else if (v_params_delay_et.getText().toString().equals("6")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom6);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 6100;
+        } else if (v_params_delay_et.getText().toString().equals("7")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom7);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 7200;
+
+        } else if (v_params_delay_et.getText().toString().equals("8")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom8);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 8500;
+
+        } else if (v_params_delay_et.getText().toString().equals("9")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom9);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 9700;
+
+
+        } else if (v_params_delay_et.getText().toString().equals("10")) {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom10);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 9900;
+
+        } else {
+            mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom1);
+            mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 0;
+
+        }
         int distance = 1400;
         float scale = getResources().getDisplayMetrics().density * distance;
         mCardFrontLayout.setCameraDistance(scale);
         mCardBackLayout.setCameraDistance(scale);
+        mSetLeftIn.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                still = false;
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                still = true;
+            }
+        });
+
+        flipCard(number, handlerTime);
+
     }
 
-    private void loadAnimations() {
-        mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation);
-        mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
-        mSetRightOut.setInterpolator(new OvershootInterpolator(0.19f));
 
-        mSetRightOut.setTarget(mCardFrontLayout);
-        mSetLeftIn.setTarget(mCardBackLayout);
-        mSetRightOut.start();
-        mSetLeftIn.start();
-
-
-    }
-
-
-    public void flipCard(int number) {
+    public void flipCard(int number, int mills) {
+        Log.d("plaplaplalaplpalpalpl", "flipCard: "+counter);
         if (!still) {
             if (!mIsBackVisible) {
-                if(Integer.parseInt(v_params_quantity_et.getText().toString())>1){
-                    first.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-                    StringBuilder s = new StringBuilder();
-                    for(int i = 0 ; i<Integer.parseInt(v_params_quantity_et.getText().toString()); i++){
-                        if (i+1 == Integer.parseInt(v_params_quantity_et.getText().toString())) {
+                first.setText("");
+                second.setText("");
+                mSetRightOut.setTarget(mCardBackLayout);
+                mSetLeftIn.setTarget(mCardFrontLayout);
+                mSetRightOut.start();
+                StringBuilder s = new StringBuilder();
+                 if(Integer.parseInt(v_params_quantity_et.getText().toString())+counter<this.number.size()) {
+                    for (int i = 0; i < Integer.parseInt(v_params_quantity_et.getText().toString()); i++) {
+                        if (i + 1 == Integer.parseInt(v_params_quantity_et.getText().toString())) {
                             s.append(this.number.get(counter + i));
                         } else {
                             s.append(this.number.get(counter + i)).append(", ");
                         }
                     }
-                    counter+=Integer.parseInt(v_params_quantity_et.getText().toString())-1;
-                    first.setText(s);
+                    counter += Integer.parseInt(v_params_quantity_et.getText().toString());
                 }
                 else{
-                    first.setText(number+"");
-                    first.setTextSize(TypedValue.COMPLEX_UNIT_SP, 95);
+                     for (int i = counter; i < this.number.size(); i++) {
+                         if(counter+1==this.number.size()){
+                             counter = 0;
+                             s.append(this.number.get(counter + i));
+                             break;
+                         }
+                         s.append(this.number.get(counter + i)).append(", ");
+                     }
                 }
-                mSetRightOut.setTarget(mCardFrontLayout);
-                mSetLeftIn.setTarget(mCardBackLayout);
-                mSetRightOut.start();
-                mSetLeftIn.start();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (Integer.parseInt(v_params_quantity_et.getText().toString()) > 1) {
+                            second.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                            second.setText(s);
+                        } else {
+                            second.setText(number + "");
+                            second.setTextSize(TypedValue.COMPLEX_UNIT_SP, 95);
+                        }
+
+                        Handler handleedr = new Handler();
+                        handleedr.postDelayed(new Runnable() {
+                            public void run() {
+                                first.setText("");
+                            }
+                        }, 600);
+                        mSetLeftIn.start();
+                    }
+                }, mills);
+
+
                 mIsBackVisible = true;
                 final int min = 0;
                 final int max = 8;
                 final int random = new Random().nextInt((max - min) + 1) + min;
-                card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
+                card_front_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
+
             } else {
-                if(Integer.parseInt(v_params_quantity_et.getText().toString())>1){
-                    second.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-                    StringBuilder s = new StringBuilder();
-                    for(int i = 0 ; i<Integer.parseInt(v_params_quantity_et.getText().toString()); i++) {
-                        if (i+1 == Integer.parseInt(v_params_quantity_et.getText().toString())) {
+
+                first.setText("");
+                second.setText("");
+                mSetRightOut.setTarget(mCardFrontLayout);
+                mSetLeftIn.setTarget(mCardBackLayout);
+                mSetRightOut.start();
+
+                StringBuilder s = new StringBuilder();
+                if(Integer.parseInt(v_params_quantity_et.getText().toString())+counter<this.number.size()) {
+                    for (int i = 0; i < Integer.parseInt(v_params_quantity_et.getText().toString()); i++) {
+                        if (i + 1 == Integer.parseInt(v_params_quantity_et.getText().toString())) {
                             s.append(this.number.get(counter + i));
                         } else {
                             s.append(this.number.get(counter + i)).append(", ");
                         }
                     }
-                    counter+=Integer.parseInt(v_params_quantity_et.getText().toString())-1;
-                    second.setText(s);}
-                else{
-                    second.setText(number+"");
-                    second.setTextSize(TypedValue.COMPLEX_UNIT_SP, 95);
+                    counter += Integer.parseInt(v_params_quantity_et.getText().toString());
                 }
-                mSetRightOut.setTarget(mCardBackLayout);
-                mSetLeftIn.setTarget(mCardFrontLayout);
-                mSetRightOut.start();
-                mSetLeftIn.start();
+                else{
+                    for (int i = counter; i < this.number.size(); i++) {
+                        if(counter+1==this.number.size()){
+                            counter = 0;
+                            s.append(this.number.get(counter + i));
+                            break;
+                        }
+                            s.append(this.number.get(counter + i)).append(", ");
+                        }
+                    }
+
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (Integer.parseInt(v_params_quantity_et.getText().toString()) > 1) {
+                            first.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                            first.setText(s);
+                        } else {
+                            first.setText(number + "");
+                            first.setTextSize(TypedValue.COMPLEX_UNIT_SP, 95);
+                        }
+                        Handler handleedr = new Handler();
+                        handleedr.postDelayed(new Runnable() {
+                            public void run() {
+                                second.setText("0");
+                            }
+                        }, 600);
+                        mSetLeftIn.start();
+                    }
+                }, mills);
+
+
                 mIsBackVisible = false;
                 final int min = 0;
                 final int max = 8;
                 final int random = new Random().nextInt((max - min) + 1) + min;
-                card_front_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
+                card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
             }
-        }
-        Log.d("plaplaplpal", "flipCard: "+counter+"  "+this.number.size());
-        if (counter==this.number.size()-1){
-            counter=0;
-            Snackbar.make(v.findViewById(R.id.root), "Все возможные варианты сгенерированы!", Snackbar.LENGTH_LONG)
-                    .setAction("OK", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+            /*Log.d("plaplaplpal", mIsBackVisible+"flipCard: " + counter + "  " + this.number.size());
+            if (counter == this.number.size() - 1) {
+                counter = 0;
+                Snackbar.make(v.findViewById(R.id.root), "Все возможные варианты сгенерированы!", Snackbar.LENGTH_LONG)
+                        .setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                        }
-                    })
-                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
-                    .show();
+                            }
+                        })
+                        .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                        .show();
+            }
+            */
+
+            v_param_no_repeat_counter.setText(counter + "/" + counts);
+
+
         }
-        counter++;
-        v_param_no_repeat_counter.setText(counter+"/" + counts);
+
+        Log.d("plaplaplalaplpalpalpl", "flipCard: "+counter);
+
 
     }
 
-    public void Shuffling(){
+    public void Shuffling() {
         number = new ArrayList<>();
         for (int i = Integer.parseInt(f_num_from_et.getText().toString()) - 1;
              i < Integer.parseInt(f_num_to.getText().toString()); i++) {
             number.add((int) (i + 1));
         }
     }
-    public void getNewData(){
-        number = ((MainActivity)getActivity()).characters;
+
+    public void getNewData() {
+        number = ((MainActivity) getActivity()).characters;
     }
 
 }

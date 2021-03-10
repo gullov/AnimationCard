@@ -9,8 +9,13 @@
         android:label="Случайное число UX"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        
         android:theme="@style/Theme.Random">
-        <activity android:name=".RandomActivity"></activity>
+        <activity
+            android:name=".MainActivity2"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/Theme.Random.NoActionBar" />
+        <activity android:name=".RandomActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
