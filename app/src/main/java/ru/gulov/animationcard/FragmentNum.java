@@ -645,7 +645,7 @@ public class FragmentNum extends Fragment {
                 mSetRightOut.start();
                 StringBuilder s = new StringBuilder();
 
-                 if(count+counter<this.number.size()) {
+                if(count+counter<this.number.size()) {
                     for (int i = 0; i <count; i++) {
                         if (i  == count-1) {
                             s.append(this.number.get(counter + i));
@@ -657,14 +657,14 @@ public class FragmentNum extends Fragment {
                     counter += count;
                 }
                 else{
-                     for (int i = counter; i < this.number.size(); i++) {
-                         if(counter+1==this.number.size()){
-                             s.append(this.number.get(counter + i));
-                             break;
-                         }
-                         else  s.append(this.number.get(i)).append(", ");
-                         counter = 0;
-                     }
+                    for (int i = counter; i < this.number.size(); i++) {
+                        if(i+1==this.number.size()){
+                            s.append(this.number.get(counter + i));
+                            break;
+                        }
+                        else  s.append(this.number.get(i)).append(", ");
+                        showSnacbar();
+                    }
                 }
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -716,13 +716,13 @@ public class FragmentNum extends Fragment {
                 }
                 else{
                     for (int i = counter; i < this.number.size(); i++) {
-                        if(counter+1==this.number.size()){
+                        if(i+1==this.number.size()){
                             s.append(this.number.get(i));
                             break;
                         }
                         else  s.append(this.number.get(i)).append(", ");
 
-                        counter = 0;
+                        showSnacbar();
                     }
                 }
 
@@ -756,16 +756,7 @@ public class FragmentNum extends Fragment {
             }
             Log.d("plaplaplpal", mIsBackVisible+"flipCard: " + counter + "  " + this.number.size());
             if (counter == this.number.size() - 1) {
-                counter = 0;
-                Snackbar.make(v.findViewById(R.id.root), "Все возможные варианты сгенерированы!", Snackbar.LENGTH_LONG)
-                        .setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
 
-                            }
-                        })
-                        .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
-                        .show();
             }
 
 
@@ -777,6 +768,19 @@ public class FragmentNum extends Fragment {
         Log.d("plaplaplalaplpalpalpl", "flipCard: "+counter);
 
 
+    }
+    public void showSnacbar(){
+        counter = 0;
+        Shuffling();
+        Snackbar.make(v.findViewById(R.id.root), "Все возможные варианты сгенерированы!", Snackbar.LENGTH_LONG)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                })
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                .show();
     }
 
     public void Shuffling() {
