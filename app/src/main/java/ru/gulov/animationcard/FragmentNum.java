@@ -32,6 +32,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import androidx.appcompat.app.AlertDialog;
@@ -169,7 +170,6 @@ public class FragmentNum extends Fragment {
             f_num_from_et.clearFocus();
             hideKeyboard(v);
             Shuffling();
-
             counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
             v_param_no_repeat_counter.setText("0/" + counts);
         });
@@ -392,11 +392,18 @@ public class FragmentNum extends Fragment {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == R.id.two) {
-
                             v_params_no_repeat.setVisibility(View.GONE);
                             editor.putBoolean("s1", false);
                             editor.apply();
 
+                        }
+                        else {
+                            Log.d("plaplapl", "onEditorAction: " + "plaplap");
+                            f_num_to.clearFocus();
+                            hideKeyboard(v);
+                            Shuffling();
+                            counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
+                            v_param_no_repeat_counter.setText("0/" + counts);
 
                         }
                         return true;
@@ -620,9 +627,15 @@ public class FragmentNum extends Fragment {
 
     }
 
-
+    int count = 1;
     public void flipCard(int number, int mills) {
         Log.d("plaplaplalaplpalpalpl", "flipCard: "+counter);
+        if(!v_params_quantity_et.getText().toString().equals("")){
+            count = Integer.parseInt(v_params_quantity_et.getText().toString());
+        }
+        else{
+            count = 1;
+        }
         if (!still) {
             if (!mIsBackVisible) {
                 first.setText("");
@@ -631,30 +644,32 @@ public class FragmentNum extends Fragment {
                 mSetLeftIn.setTarget(mCardFrontLayout);
                 mSetRightOut.start();
                 StringBuilder s = new StringBuilder();
-                 if(Integer.parseInt(v_params_quantity_et.getText().toString())+counter<this.number.size()) {
-                    for (int i = 0; i < Integer.parseInt(v_params_quantity_et.getText().toString()); i++) {
-                        if (i + 1 == Integer.parseInt(v_params_quantity_et.getText().toString())) {
+
+                 if(count+counter<this.number.size()) {
+                    for (int i = 0; i <count; i++) {
+                        if (i  == count-1) {
                             s.append(this.number.get(counter + i));
+                            break;
                         } else {
                             s.append(this.number.get(counter + i)).append(", ");
                         }
                     }
-                    counter += Integer.parseInt(v_params_quantity_et.getText().toString());
+                    counter += count;
                 }
                 else{
                      for (int i = counter; i < this.number.size(); i++) {
                          if(counter+1==this.number.size()){
-                             counter = 0;
                              s.append(this.number.get(counter + i));
                              break;
                          }
-                         s.append(this.number.get(counter + i)).append(", ");
+                         else  s.append(this.number.get(i)).append(", ");
+                         counter = 0;
                      }
                 }
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
-                        if (Integer.parseInt(v_params_quantity_et.getText().toString()) > 1) {
+                        if (count > 1) {
                             second.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
                             second.setText(s);
                         } else {
@@ -688,32 +703,34 @@ public class FragmentNum extends Fragment {
                 mSetRightOut.start();
 
                 StringBuilder s = new StringBuilder();
-                if(Integer.parseInt(v_params_quantity_et.getText().toString())+counter<this.number.size()) {
-                    for (int i = 0; i < Integer.parseInt(v_params_quantity_et.getText().toString()); i++) {
-                        if (i + 1 == Integer.parseInt(v_params_quantity_et.getText().toString())) {
+                if(count+counter<this.number.size()) {
+                    for (int i = 0; i <count; i++) {
+                        if (i  == count-1) {
                             s.append(this.number.get(counter + i));
+                            break;
                         } else {
                             s.append(this.number.get(counter + i)).append(", ");
                         }
                     }
-                    counter += Integer.parseInt(v_params_quantity_et.getText().toString());
+                    counter += count;
                 }
                 else{
                     for (int i = counter; i < this.number.size(); i++) {
                         if(counter+1==this.number.size()){
-                            counter = 0;
-                            s.append(this.number.get(counter + i));
+                            s.append(this.number.get(i));
                             break;
                         }
-                            s.append(this.number.get(counter + i)).append(", ");
-                        }
+                        else  s.append(this.number.get(i)).append(", ");
+
+                        counter = 0;
                     }
+                }
 
 
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
-                        if (Integer.parseInt(v_params_quantity_et.getText().toString()) > 1) {
+                        if (count > 1) {
                             first.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
                             first.setText(s);
                         } else {
@@ -737,7 +754,7 @@ public class FragmentNum extends Fragment {
                 final int random = new Random().nextInt((max - min) + 1) + min;
                 card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
             }
-            /*Log.d("plaplaplpal", mIsBackVisible+"flipCard: " + counter + "  " + this.number.size());
+            Log.d("plaplaplpal", mIsBackVisible+"flipCard: " + counter + "  " + this.number.size());
             if (counter == this.number.size() - 1) {
                 counter = 0;
                 Snackbar.make(v.findViewById(R.id.root), "Все возможные варианты сгенерированы!", Snackbar.LENGTH_LONG)
@@ -750,7 +767,7 @@ public class FragmentNum extends Fragment {
                         .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                         .show();
             }
-            */
+
 
             v_param_no_repeat_counter.setText(counter + "/" + counts);
 
@@ -768,6 +785,7 @@ public class FragmentNum extends Fragment {
              i < Integer.parseInt(f_num_to.getText().toString()); i++) {
             number.add((int) (i + 1));
         }
+        Collections.shuffle(number);
     }
 
     public void getNewData() {
