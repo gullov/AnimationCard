@@ -85,7 +85,6 @@ public class FragmentNum extends Fragment {
     private View mCardBackLayout;
     private Switch switch1;
     public FragmentNum() {
-        // Required empty public constructor
     }
 
     @Override
@@ -128,7 +127,7 @@ public class FragmentNum extends Fragment {
         f_num_to.setCustomListener(new CustomEditText.MyAdapterListener() {
             @Override
             public void backPressed(View v, boolean a) {
-                Log.d("plaplapl", "onEditorAction: " + "plaplap");
+
                 f_num_to.clearFocus();
                 hideKeyboard(v);
                 Shuffling();
@@ -141,7 +140,7 @@ public class FragmentNum extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    Log.d("plaplapl", "onEditorAction: " + "plaplap");
+
                     f_num_to.clearFocus();
                     hideKeyboard(v);
                     Shuffling();
@@ -166,7 +165,7 @@ public class FragmentNum extends Fragment {
         });
 
         f_num_from_et.setCustomListener((v, a) -> {
-            Log.d("plaplapl", "onEditorAction: " + "plaplap");
+
             f_num_from_et.clearFocus();
             hideKeyboard(v);
             Shuffling();
@@ -193,7 +192,7 @@ public class FragmentNum extends Fragment {
                 if (hasFocus) {
                     v_trigger_fabs.hide();
                 } else {
-                    //lost focus
+
                 }
             }
         });
@@ -211,7 +210,6 @@ public class FragmentNum extends Fragment {
                 switch (actionId) {
 
                     case EditorInfo.IME_ACTION_DONE:
-                        Log.d("plaplapl", "onEditorAction: " + "plaplap");
                         v_params_delay_et.clearFocus();
                         hideKeyboard(v);
                         return true;
@@ -228,7 +226,7 @@ public class FragmentNum extends Fragment {
                 if (hasFocus) {
                     v_trigger_fabs.hide();
                 } else {
-                    //lost focus
+
                 }
             }
         });
@@ -247,7 +245,7 @@ public class FragmentNum extends Fragment {
                 switch (actionId) {
 
                     case EditorInfo.IME_ACTION_DONE:
-                        Log.d("plaplapl", "onEditorAction: " + "plaplap");
+
                         v_params_quantity_et.clearFocus();
                         hideKeyboard(v);
                         return true;
@@ -264,7 +262,8 @@ public class FragmentNum extends Fragment {
                 if (hasFocus) {
                     v_trigger_fabs.hide();
                 } else {
-                    //lost focus
+
+
                 }
             }
         });
@@ -398,7 +397,7 @@ public class FragmentNum extends Fragment {
 
                         }
                         else {
-                            Log.d("plaplapl", "onEditorAction: " + "plaplap");
+
                             f_num_to.clearFocus();
                             hideKeyboard(v);
                             Shuffling();
@@ -542,8 +541,7 @@ public class FragmentNum extends Fragment {
         if (v_params_delay_et.getText().toString().equals("1")) {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom1);
             mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
-            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
-            handlerTime = 0;
+            handlerTime = 300;
         } else if (v_params_delay_et.getText().toString().equals("2")) {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom2);
             mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
@@ -681,9 +679,9 @@ public class FragmentNum extends Fragment {
                         handleedr.postDelayed(new Runnable() {
                             public void run() {
                                 first.setText("");
+                                mSetLeftIn.start();
                             }
-                        }, 600);
-                        mSetLeftIn.start();
+                        }, 450);
                     }
                 }, mills);
 
@@ -741,9 +739,9 @@ public class FragmentNum extends Fragment {
                         handleedr.postDelayed(new Runnable() {
                             public void run() {
                                 second.setText("0");
+                                mSetLeftIn.start();
                             }
-                        }, 600);
-                        mSetLeftIn.start();
+                        }, 450);
                     }
                 }, mills);
 
@@ -754,7 +752,7 @@ public class FragmentNum extends Fragment {
                 final int random = new Random().nextInt((max - min) + 1) + min;
                 card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
             }
-            Log.d("plaplaplpal", mIsBackVisible+"flipCard: " + counter + "  " + this.number.size());
+
             if (counter == this.number.size() - 1) {
 
             }
@@ -765,7 +763,7 @@ public class FragmentNum extends Fragment {
 
         }
 
-        Log.d("plaplaplalaplpalpalpl", "flipCard: "+counter);
+
 
 
     }
@@ -796,4 +794,19 @@ public class FragmentNum extends Fragment {
         number = ((MainActivity) getActivity()).characters;
     }
 
+    @Override
+    public void onPause() {
+        editor.putString("s4", f_num_from_et.getText().toString());
+        editor.putString("s5", f_num_to.getText().toString());
+        editor.putString("s6", v_params_delay_et.getText().toString());
+        editor.putString("s7", v_params_quantity_et.getText().toString());
+        editor.putInt("s8", counter);
+        editor.apply();
+        super.onPause();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 }
