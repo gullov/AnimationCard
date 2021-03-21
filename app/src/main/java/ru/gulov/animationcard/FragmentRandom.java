@@ -1,5 +1,6 @@
 package ru.gulov.animationcard;
 
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +28,9 @@ public class FragmentRandom extends Fragment {
     ArrayList<Integer> phNumber = new ArrayList<>();
     Integer[] callDurations;
     int count;
+    ImageView out_btn;
+    int[] number;
+    int counts;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +44,7 @@ public class FragmentRandom extends Fragment {
             callDurations[i] = i+1;
             Log.d("TAGssss", "onCreate: "+callDurations[i]);
         }
+        out_btn = v.findViewById(R.id.out_btn);
         phNumber.addAll(Arrays.asList(callDurations));
         recyclerView = v.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
@@ -47,6 +53,10 @@ public class FragmentRandom extends Fragment {
         recyclerView.setVerticalScrollBarEnabled(false);
         recyclerView.smoothScrollToPosition(0);
         mAdapter = new RandomAdapter(getActivity().getApplicationContext(),phNumber, (vs, number, counts) -> {
+            this.number = number;
+            this.counts = counts;
+        });
+        out_btn.setOnClickListener(v1 -> {
             doIt(number, counts);
         });
         recyclerView.setAdapter(mAdapter);

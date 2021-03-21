@@ -72,10 +72,10 @@ public class RandomAdapter extends RecyclerView.Adapter<RandomAdapter.ViewHolder
                     savedNums[count-1] = Integer.parseInt(holder.editText.getText().toString());
                 }
                 else{
-                    onClickListener.itemClick(holder.editText, savedNums, count);
                     count = 0;
                     savedNums = new int[150];
                 }
+                onClickListener.itemClick(holder.editText, savedNums, count);
                 return false;
 
             }

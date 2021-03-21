@@ -1,4 +1,4 @@
-package ru.gulov.animationcard;
+  package ru.gulov.animationcard;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -85,6 +85,7 @@ public class FragmentNum extends Fragment {
     private View mCardBackLayout;
     private Switch switch1;
     public FragmentNum() {
+        // Required empty public constructor
     }
 
     @Override
@@ -120,14 +121,25 @@ public class FragmentNum extends Fragment {
         mCardBackLayout = v.findViewById(R.id.card_back);
         mCardFrontLayout = v.findViewById(R.id.card_front);
 
+        f_num_from_et.setText(pref.getString("z0", "1"));
+        f_num_to.setText(pref.getString("z1", "10"));
+        counter = pref.getInt("z2", 0);
+        v_params_quantity_et.setText(pref.getString("z3", ""));
+        v_params_delay_et.setText(pref.getString("z4", ""));
+        for (int i = 0 ; i<pref.getInt("z5", 0);i++){
+            number.add(pref.getInt("number"+i, 1));
+        }
+        if(counter==0){
+            Shuffling();
+        }
 
         counts = "" + (abs(Integer.parseInt(f_num_to.getText().toString()) - Integer.parseInt(f_num_from_et.getText().toString())) + 1);
-        v_param_no_repeat_counter.setText("0/" + counts);
+        v_param_no_repeat_counter.setText(counter + "/" + counts);
 
         f_num_to.setCustomListener(new CustomEditText.MyAdapterListener() {
             @Override
             public void backPressed(View v, boolean a) {
-
+                Log.d("plaplapl", "onEditorAction: " + "plaplap");
                 f_num_to.clearFocus();
                 hideKeyboard(v);
                 Shuffling();
@@ -140,7 +152,7 @@ public class FragmentNum extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-
+                    Log.d("plaplapl", "onEditorAction: " + "plaplap");
                     f_num_to.clearFocus();
                     hideKeyboard(v);
                     Shuffling();
@@ -165,7 +177,7 @@ public class FragmentNum extends Fragment {
         });
 
         f_num_from_et.setCustomListener((v, a) -> {
-
+            Log.d("plaplapl", "onEditorAction: " + "plaplap");
             f_num_from_et.clearFocus();
             hideKeyboard(v);
             Shuffling();
@@ -192,7 +204,7 @@ public class FragmentNum extends Fragment {
                 if (hasFocus) {
                     v_trigger_fabs.hide();
                 } else {
-
+                    //lost focus
                 }
             }
         });
@@ -210,6 +222,7 @@ public class FragmentNum extends Fragment {
                 switch (actionId) {
 
                     case EditorInfo.IME_ACTION_DONE:
+                        Log.d("plaplapl", "onEditorAction: " + "plaplap");
                         v_params_delay_et.clearFocus();
                         hideKeyboard(v);
                         return true;
@@ -226,7 +239,7 @@ public class FragmentNum extends Fragment {
                 if (hasFocus) {
                     v_trigger_fabs.hide();
                 } else {
-
+                    //lost focus
                 }
             }
         });
@@ -245,7 +258,7 @@ public class FragmentNum extends Fragment {
                 switch (actionId) {
 
                     case EditorInfo.IME_ACTION_DONE:
-
+                        Log.d("plaplapl", "onEditorAction: " + "plaplap");
                         v_params_quantity_et.clearFocus();
                         hideKeyboard(v);
                         return true;
@@ -262,13 +275,11 @@ public class FragmentNum extends Fragment {
                 if (hasFocus) {
                     v_trigger_fabs.hide();
                 } else {
-
-
+                    //lost focus
                 }
             }
         });
 
-        Shuffling();
         if (pref.getBoolean("s1", true)) {
             v_params_no_repeat.setVisibility(View.VISIBLE);
         } else {
@@ -397,7 +408,7 @@ public class FragmentNum extends Fragment {
 
                         }
                         else {
-
+                            Log.d("plaplapl", "onEditorAction: " + "plaplap");
                             f_num_to.clearFocus();
                             hideKeyboard(v);
                             Shuffling();
@@ -627,13 +638,15 @@ public class FragmentNum extends Fragment {
 
     int count = 1;
     public void flipCard(int number, int mills) {
-        Log.d("plaplaplalaplpalpalpl", "flipCard: "+counter);
+        for (int i = 0 ; i<this.number.size();i++) {
+            Log.d("plaplaplalaplpalpalpl", "flipCard: " + this.number.get(i));
+        }
         if(!v_params_quantity_et.getText().toString().equals("")){
             count = Integer.parseInt(v_params_quantity_et.getText().toString());
-        }
-        else{
+        } else{
             count = 1;
         }
+
         if (!still) {
             if (!mIsBackVisible) {
                 first.setText("");
@@ -643,7 +656,7 @@ public class FragmentNum extends Fragment {
                 mSetRightOut.start();
                 StringBuilder s = new StringBuilder();
 
-                if(count+counter<this.number.size()) {
+                 if(count+counter<this.number.size()) {
                     for (int i = 0; i <count; i++) {
                         if (i  == count-1) {
                             s.append(this.number.get(counter + i));
@@ -655,15 +668,27 @@ public class FragmentNum extends Fragment {
                     counter += count;
                 }
                 else{
-                    for (int i = counter; i < this.number.size(); i++) {
-                        if(i+1==this.number.size()){
-                            s.append(this.number.get(counter + i));
-                            break;
-                        }
-                        else  s.append(this.number.get(i)).append(", ");
-                        showSnacbar();
-                    }
+                     for (int i = counter; i < this.number.size(); i++) {
+                         if(i+1==this.number.size()){
+                             s.append(this.number.get(i));
+                             counter = 0;
+                             Shuffling();
+                             Snackbar.make(v.findViewById(R.id.root), "Все возможные варианты сгенерированы!", Snackbar.LENGTH_LONG)
+                                     .setAction("OK", new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View view) {
+
+                                         }
+                                     })
+                                     .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                                     .show();
+                         }
+                         else  {
+                             s.append(this.number.get(i)).append(", ");
+                         }
+                     }
                 }
+
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
@@ -679,12 +704,11 @@ public class FragmentNum extends Fragment {
                         handleedr.postDelayed(new Runnable() {
                             public void run() {
                                 first.setText("");
-                                mSetLeftIn.start();
                             }
-                        }, 450);
+                        }, 600);
+                        mSetLeftIn.start();
                     }
                 }, mills);
-
 
                 mIsBackVisible = true;
                 final int min = 0;
@@ -714,13 +738,25 @@ public class FragmentNum extends Fragment {
                 }
                 else{
                     for (int i = counter; i < this.number.size(); i++) {
+                        Log.d("plaplaplalaplpalpalplss", i+"flipCard: " + this.number.get(i));
                         if(i+1==this.number.size()){
                             s.append(this.number.get(i));
-                            break;
-                        }
-                        else  s.append(this.number.get(i)).append(", ");
+                            counter = 0;
+                            Shuffling();
+                            Snackbar.make(v.findViewById(R.id.root), "Все возможные варианты сгенерированы!", Snackbar.LENGTH_LONG)
+                                    .setAction("OK", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
 
-                        showSnacbar();
+                                        }
+                                    })
+                                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                                    .show();
+
+                        }
+                        else  {
+                            s.append(this.number.get(i)).append(", ");
+                        }
                     }
                 }
 
@@ -739,9 +775,9 @@ public class FragmentNum extends Fragment {
                         handleedr.postDelayed(new Runnable() {
                             public void run() {
                                 second.setText("0");
-                                mSetLeftIn.start();
                             }
-                        }, 450);
+                        }, 600);
+                        mSetLeftIn.start();
                     }
                 }, mills);
 
@@ -752,10 +788,10 @@ public class FragmentNum extends Fragment {
                 final int random = new Random().nextInt((max - min) + 1) + min;
                 card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
             }
+            Log.d("plaplaplpal", mIsBackVisible+"flipCard: " + counter + "  " + this.number.size());
 
-            if (counter == this.number.size() - 1) {
 
-            }
+
 
 
             v_param_no_repeat_counter.setText(counter + "/" + counts);
@@ -763,22 +799,9 @@ public class FragmentNum extends Fragment {
 
         }
 
+        Log.d("plaplaplalaplpalpalpl", "flipCard: "+counter);
 
 
-
-    }
-    public void showSnacbar(){
-        counter = 0;
-        Shuffling();
-        Snackbar.make(v.findViewById(R.id.root), "Все возможные варианты сгенерированы!", Snackbar.LENGTH_LONG)
-                .setAction("OK", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
-                .show();
     }
 
     public void Shuffling() {
@@ -788,25 +811,26 @@ public class FragmentNum extends Fragment {
             number.add((int) (i + 1));
         }
         Collections.shuffle(number);
+
+    }
+
+    @Override
+    public void onPause() {
+        editor.putString("z0", f_num_from_et.getText().toString());
+        editor.putString("z1", f_num_to.getText().toString());
+        editor.putInt("z2", counter);
+        editor.putString("z3", v_params_quantity_et.getText().toString());
+        editor.putString("z4", v_params_delay_et.getText().toString());
+        editor.putInt("z5", number.size());
+        for (int i = 0 ; i<number.size();i++){
+            editor.putInt("number"+i, number.get(i));
+        }
+        editor.apply();
+        super.onPause();
     }
 
     public void getNewData() {
         number = ((MainActivity) getActivity()).characters;
     }
 
-    @Override
-    public void onPause() {
-        editor.putString("s4", f_num_from_et.getText().toString());
-        editor.putString("s5", f_num_to.getText().toString());
-        editor.putString("s6", v_params_delay_et.getText().toString());
-        editor.putString("s7", v_params_quantity_et.getText().toString());
-        editor.putInt("s8", counter);
-        editor.apply();
-        super.onPause();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 }
