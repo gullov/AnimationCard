@@ -2,11 +2,11 @@
 
     <item
         android:id="@+id/one"
-        android:title="Сбросить"/>
+        android:title="Сбросить "/>
 
     <item
         android:id="@+id/two"
-        android:title="Отключить"/>
+        android:title="Отключить            "/>
 
 
 </menu>

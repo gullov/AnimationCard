@@ -27,7 +27,7 @@ public class FragmentRandom extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<Integer> phNumber = new ArrayList<>();
     Integer[] callDurations;
-    int count;
+    int count, startCount;
     ImageView out_btn;
     int[] number;
     int counts;
@@ -38,11 +38,12 @@ public class FragmentRandom extends Fragment {
         View v = inflater.inflate(R.layout.fragment_random, container, false);
 
         count =((MainActivity)getActivity()).count;
-        callDurations = new Integer[count];
+        startCount =((MainActivity)getActivity()).startCount;
+        callDurations = new Integer[count-startCount+1];
         phNumber = new ArrayList<>();
-        for(int i = 0 ; i<count;i++){
-            callDurations[i] = i+1;
-            Log.d("TAGssss", "onCreate: "+callDurations[i]);
+        for(int i = startCount, j=0 ; i<=count ;i++, j++){
+            callDurations[j] = i;
+            Log.d("TAGssss", count+"onCreate: "+callDurations[j]);
         }
         out_btn = v.findViewById(R.id.out_btn);
         phNumber.addAll(Arrays.asList(callDurations));
@@ -74,7 +75,7 @@ public class FragmentRandom extends Fragment {
             phNumber.add(number[i]);
         }
 
-        for (int i = 1; i<=count;i++){
+        for (int i = startCount; i<=count;i++){
             for (int j = 0 ; j<counts;j++){
                 if(i==number[j]){
                     finder++;

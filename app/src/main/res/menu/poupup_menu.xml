@@ -2,7 +2,8 @@
 
     <item
         android:id="@+id/one"
-        android:title="One"/>
+        android:title="One"
+        />
 
     <item
         android:id="@+id/two"

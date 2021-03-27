@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#FAFAFA"
+    android:background="#303030"
     android:id="@+id/root"
     android:layout_height="match_parent"
     tools:context=".NumActivity">
@@ -20,6 +20,7 @@
             <TextView
                 style="@style/TextStyle.Main"
                 android:layout_marginTop="16.0dip"
+                android:textColor="#FFFFFF"
                 android:text="ОТ" />
 
             <ru.gulov.animationcard.CustomEditText
@@ -31,6 +32,7 @@
 
             <TextView
                 style="@style/TextStyle.Main"
+                android:textColor="#FFFFFF"
                 android:text="ДО" />
 
             <ru.gulov.animationcard.CustomEditText
@@ -52,6 +54,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/f_num_toolbar"
+            android:background="#212121"
             style="@style/LightAppBarStyle.ModeStyle">
             <RelativeLayout
                 android:layout_width="match_parent"

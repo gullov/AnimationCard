@@ -34,8 +34,8 @@
     <color name="coinBgColor">#fff3f3f3</color>
     <color name="coinBgColorDark">#ff202020</color>
     <color name="colorAccent">#ffc2185b</color>
-    <color name="colorPrimary">#ff00bcd4</color>
-    <color name="colorPrimaryDark">#ff00acc1</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="common_google_signin_btn_text_dark_default">@android:color/white</color>
     <color name="common_google_signin_btn_text_dark_disabled">#1f000000</color>
     <color name="common_google_signin_btn_text_dark_focused">@android:color/black</color>

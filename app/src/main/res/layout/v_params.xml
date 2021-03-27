@@ -10,6 +10,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/v_params_no_repeat"
+        app:cardBackgroundColor="#424242"
         style="@style/ParamsCard">
 
         <ImageView
@@ -27,11 +28,13 @@
 
             <TextView
                 style="@style/TextStyle.Params"
+                android:textColor="#FFFFFF"
                 android:text="Без повторений" />
 
             <TextView
                 android:id="@+id/v_param_no_repeat_counter"
                 style="@style/TextStyle.Params"
+                android:textColor="#FFFFFF"
                 android:text="1/1000"
                 android:layout_marginTop="16.0dip"
                 android:layout_marginBottom="24.0dip"
@@ -41,6 +44,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/v_params_quantity"
+        app:cardBackgroundColor="#424242"
         style="@style/ParamsCard">
 
         <ImageView
@@ -56,12 +60,14 @@
             android:orientation="vertical">
             <TextView
                 style="@style/TextStyle.Params"
+                android:textColor="#FFFFFF"
                 android:text="Количество" />
 
             <ru.gulov.animationcard.CustomEditText
                 android:id="@+id/v_params_quantity_et"
 				style="@style/TextStyle.Params.Input.Number"
                 android:layout_marginBottom="0.0dip"
+                android:textColor="#FFFFFF"
                 android:hint="1 - 100"
 				android:layout_height="wrap_content" />
 
@@ -70,6 +76,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/v_params_delay"
+        app:cardBackgroundColor="#424242"
         style="@style/ParamsCard">
 
         <ImageView
@@ -86,12 +93,14 @@
 
             <TextView
                 style="@style/TextStyle.Params"
+                android:textColor="#FFFFFF"
                 android:text="Время задержки (сек)" />
 
             <ru.gulov.animationcard.CustomEditText
                 android:id="@+id/v_params_delay_et"
                 style="@style/TextStyle.Params.Input.Number"
                 android:layout_marginBottom="0.0dip"
+                android:textColor="#FFFFFF"
                 android:hint="1 - 100" />
 
         </LinearLayout>

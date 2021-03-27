@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
+    android:background="#303030"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/purple_500"
-
+        app:popupTheme="@style/PopupMenu"
+        android:background="#212121"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -53,6 +53,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"
+        app:cardBackgroundColor="#424242"
         app:cardCornerRadius="0.0dip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,12 +71,12 @@
             app:tint="#f6f6f6" />
 
         <LinearLayout
+            android:id="@+id/num11"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:id="@+id/num11"
             android:gravity="center_vertical"
             android:minHeight="96.0dip"
             android:orientation="horizontal"
@@ -91,7 +92,7 @@
                 android:layout_gravity="center"
                 android:padding="4.0dip"
                 android:src="@drawable/ic_mode_num"
-                app:tint="#FF00BCD4" />
+                app:tint="#00bcd4" />
 
             <TextView
                 android:id="@+id/i_mode_title"
@@ -106,7 +107,7 @@
                 android:text="ЧИСЛО"
                 android:textAllCaps="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="#FF00BCD4"
+                android:textColor="#00bcd4"
                 android:textSize="18.0sp" />
 
         </LinearLayout>
@@ -117,6 +118,7 @@
         app:cardCornerRadius="0.0dip"
         android:id="@+id/num2"
         android:layout_marginTop="4dp"
+        app:cardBackgroundColor="#424242"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -154,7 +156,7 @@
                 android:src="@drawable/ic_mode_list"
                 android:layout_gravity="center"
                 android:padding="4.0dip"
-                app:tint="#FF00ACC1" />
+                app:tint="#26c6da" />
 
             <TextView
                 android:id="@+id/i_mode_title2"
@@ -165,7 +167,7 @@
                 android:layout_weight="1.0"
                 android:ellipsize="end"
                 android:text="СПИСОК"
-                android:textColor="#FF00ACC1"
+                android:textColor="#26c6da"
                 android:gravity="start"
                 android:maxLines="2"
                 android:textAllCaps="true"
@@ -191,6 +193,7 @@
         app:cardCornerRadius="0.0dip"
         android:id="@+id/num3"
         android:layout_marginTop="4dp"
+        app:cardBackgroundColor="#424242"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -228,7 +231,7 @@
                 android:src="@drawable/ic_mode_dice"
                 android:layout_gravity="center"
                 android:padding="4.0dip"
-                app:tint="#FF0097A7" />
+                app:tint="#4dd0e1" />
 
             <TextView
                 android:id="@+id/i_mode_title3"
@@ -239,7 +242,7 @@
                 android:layout_weight="1.0"
                 android:ellipsize="end"
                 android:text="игральные кости"
-                android:textColor="#FF0097A7"
+                android:textColor="#4dd0e1"
                 android:gravity="start"
                 android:maxLines="2"
                 android:textAllCaps="true"
@@ -253,6 +256,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="0.0dip"
         android:id="@+id/num4"
+        app:cardBackgroundColor="#424242"
         android:layout_marginTop="4dp"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -291,7 +295,7 @@
                 android:src="@drawable/ic_mode_lots"
                 android:layout_gravity="center"
                 android:padding="4.0dip"
-                app:tint="#FF00838F" />
+                app:tint="#66d7e6" />
 
             <TextView
                 android:id="@+id/i_mode_title4"
@@ -302,7 +306,7 @@
                 android:layout_weight="1.0"
                 android:ellipsize="end"
                 android:text="ЖРЕБИЙ"
-                android:textColor="#FF00838F"
+                android:textColor="#66d7e6"
                 android:gravity="start"
                 android:maxLines="2"
                 android:textAllCaps="true"
@@ -318,6 +322,7 @@
         android:id="@+id/num5"
         android:layout_marginTop="4dp"
         android:elevation="4dp"
+        app:cardBackgroundColor="#424242"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/num4">
@@ -354,7 +359,7 @@
                 android:src="@drawable/ic_mode_coin"
                 android:layout_gravity="center"
                 android:padding="4.0dip"
-                app:tint="#FF006064" />
+                app:tint="#80deea" />
 
             <TextView
                 android:id="@+id/i_mode_title5"
@@ -365,7 +370,7 @@
                 android:layout_weight="1.0"
                 android:ellipsize="end"
                 android:text="Монетка"
-                android:textColor="#FF006064"
+                android:textColor="#80deea"
                 android:gravity="start"
                 android:maxLines="2"
                 android:textAllCaps="true"

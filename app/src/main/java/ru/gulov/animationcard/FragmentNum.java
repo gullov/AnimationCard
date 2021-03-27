@@ -1,4 +1,4 @@
-  package ru.gulov.animationcard;
+package ru.gulov.animationcard;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -84,6 +84,7 @@ public class FragmentNum extends Fragment {
     private View mCardFrontLayout;
     private View mCardBackLayout;
     private Switch switch1;
+    boolean saveColor = false;
     public FragmentNum() {
         // Required empty public constructor
     }
@@ -313,6 +314,7 @@ public class FragmentNum extends Fragment {
                     ((MainActivity) getActivity()).isShowNumbers = false;
                 }
                 if (firstShow) {
+                    saveColor = true;
                     circularRevealActivity();
                     firstShow = false;
                     RotateAnimation rotate = new RotateAnimation(360, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -385,7 +387,8 @@ public class FragmentNum extends Fragment {
         v_param_add_features.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                ((MainActivity) getActivity()).count = number.size();
+                ((MainActivity) getActivity()).count = Integer.parseInt(f_num_to.getText().toString());
+                ((MainActivity) getActivity()).startCount = Integer.parseInt(f_num_from_et.getText().toString());
                 ((MainActivity) getActivity()).ShowRandom();
 
                 return true;
@@ -394,7 +397,7 @@ public class FragmentNum extends Fragment {
         v_param_no_repeat_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(getContext(), v_param_no_repeat_menu);
+                PopupMenu popup = new PopupMenu(getActivity(), v_param_no_repeat_menu);
                 //Inflating the Popup using xml file
                 popup.getMenuInflater().inflate(R.menu.pup2, popup.getMenu());
 
@@ -552,30 +555,31 @@ public class FragmentNum extends Fragment {
         if (v_params_delay_et.getText().toString().equals("1")) {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom1);
             mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
-            handlerTime = 300;
+            mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
+            handlerTime = 0;
         } else if (v_params_delay_et.getText().toString().equals("2")) {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom2);
             mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
             mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
-            handlerTime = 1300;
+            handlerTime = 1450;
 
         } else if (v_params_delay_et.getText().toString().equals("3")) {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom3);
             mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
             mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
-            handlerTime = 2500;
+            handlerTime = 2650;
 
         } else if (v_params_delay_et.getText().toString().equals("4")) {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom4);
             mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
             mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
-            handlerTime = 3700;
+            handlerTime = 3850;
 
         } else if (v_params_delay_et.getText().toString().equals("5")) {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom5);
             mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
             mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
-            handlerTime = 4900;
+            handlerTime = 5050;
 
         } else if (v_params_delay_et.getText().toString().equals("6")) {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom6);
@@ -605,7 +609,7 @@ public class FragmentNum extends Fragment {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom10);
             mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.out_animation);
             mSetRightOut.setInterpolator(new DecelerateInterpolator(2f));
-            handlerTime = 9900;
+            handlerTime = 10250;
 
         } else {
             mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.in_animation_custom1);
@@ -635,16 +639,22 @@ public class FragmentNum extends Fragment {
         flipCard(number, handlerTime);
 
     }
-
+    int randomZap = -1;
     int count = 1;
     public void flipCard(int number, int mills) {
-        for (int i = 0 ; i<this.number.size();i++) {
-            Log.d("plaplaplalaplpalpalpl", "flipCard: " + this.number.get(i));
-        }
+        Log.d("plaplapssss", "flipCard: " + randomZap);
         if(!v_params_quantity_et.getText().toString().equals("")){
             count = Integer.parseInt(v_params_quantity_et.getText().toString());
         } else{
             count = 1;
+        }
+        if (saveColor){
+            final int min = 0;
+            final int max = 8;
+            final int random = new Random().nextInt((max - min) + 1) + min;
+            card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
+            saveColor = false;
+            randomZap = random;
         }
 
         if (!still) {
@@ -704,9 +714,10 @@ public class FragmentNum extends Fragment {
                         handleedr.postDelayed(new Runnable() {
                             public void run() {
                                 first.setText("");
+
+                                mSetLeftIn.start();
                             }
-                        }, 600);
-                        mSetLeftIn.start();
+                        }, 450);
                     }
                 }, mills);
 
@@ -714,8 +725,10 @@ public class FragmentNum extends Fragment {
                 final int min = 0;
                 final int max = 8;
                 final int random = new Random().nextInt((max - min) + 1) + min;
+                if (randomZap==-1)
                 card_front_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
-
+                else card_front_color.setBackgroundTintList(getResources().getColorStateList(colors[randomZap]));
+                randomZap =-1;
             } else {
 
                 first.setText("");
@@ -775,9 +788,9 @@ public class FragmentNum extends Fragment {
                         handleedr.postDelayed(new Runnable() {
                             public void run() {
                                 second.setText("0");
+                                mSetLeftIn.start();
                             }
-                        }, 600);
-                        mSetLeftIn.start();
+                        }, 450);
                     }
                 }, mills);
 
@@ -786,7 +799,10 @@ public class FragmentNum extends Fragment {
                 final int min = 0;
                 final int max = 8;
                 final int random = new Random().nextInt((max - min) + 1) + min;
+                if (randomZap==-1)
                 card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[random]));
+                else card_back_color.setBackgroundTintList(getResources().getColorStateList(colors[randomZap]));
+                randomZap =-1;
             }
             Log.d("plaplaplpal", mIsBackVisible+"flipCard: " + counter + "  " + this.number.size());
 
@@ -816,6 +832,21 @@ public class FragmentNum extends Fragment {
 
     @Override
     public void onPause() {
+            editor.putString("z0", f_num_from_et.getText().toString());
+            editor.putString("z1", f_num_to.getText().toString());
+            editor.putInt("z2", counter);
+            editor.putString("z3", v_params_quantity_et.getText().toString());
+            editor.putString("z4", v_params_delay_et.getText().toString());
+            editor.putInt("z5", number.size());
+            for (int i = 0 ; i<number.size();i++){
+                editor.putInt("number"+i, number.get(i));
+            }
+            editor.apply();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
         editor.putString("z0", f_num_from_et.getText().toString());
         editor.putString("z1", f_num_to.getText().toString());
         editor.putInt("z2", counter);
@@ -826,7 +857,7 @@ public class FragmentNum extends Fragment {
             editor.putInt("number"+i, number.get(i));
         }
         editor.apply();
-        super.onPause();
+        super.onDestroy();
     }
 
     public void getNewData() {
